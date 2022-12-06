@@ -33,13 +33,15 @@ namespace AoC2022.days
             }
         }
 
-        public static IEnumerable<(int, TResult)> Enumerate<TResult>(this IEnumerable<TResult> items)
+
+
+        public static IEnumerable<(int index, TResult value)> Enumerate<TResult>(this IEnumerable<TResult> items)
         {
             var enumerator = items.GetEnumerator();
             int i = 0;
             while (enumerator.MoveNext())
             {
-                yield return (i++, enumerator.Current);
+                yield return (index: i++, value: enumerator.Current);
             }
         }
     }
