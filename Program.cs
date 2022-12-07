@@ -2,4 +2,4 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-Day06.solve();
+Day07.solve();
