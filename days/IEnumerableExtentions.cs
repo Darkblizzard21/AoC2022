@@ -6,8 +6,22 @@ using System.Threading.Tasks;
 
 namespace AoC2022.days
 {
-    public static class EnumeratorExtentions
+    public static class IEnumerableExtentions
     {
+        /// <summary>
+        /// Returns sequence from start (included) to end (excluded)
+        /// </summary>
+        public static IEnumerable<int> FromTo(int start, int end)
+        {
+            if(start == end) yield break;
+            int step = end - start > 0 ? 1 : -1;
+            int current = start;
+            while (current != end) {
+                yield return current;
+                current = current + step;
+            }
+        }
+
         public static IEnumerable<TResult[]> GroupSlide<TResult>(this IEnumerable<TResult> items, int groupSize)
         {
             var enumerator = items.GetEnumerator();
