@@ -49,7 +49,7 @@ namespace AoC2022.days
 
 
 
-        public static IEnumerable<(int index, TResult value)> Enumerate<TResult>(this IEnumerable<TResult> items)
+        public static IEnumerable<(int index, TResult value)> ZipWithIndices<TResult>(this IEnumerable<TResult> items)
         {
             var enumerator = items.GetEnumerator();
             int i = 0;
