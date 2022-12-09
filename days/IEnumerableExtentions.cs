@@ -22,6 +22,14 @@ namespace AoC2022.days
             }
         }
 
+        public static IEnumerable<T> Fill<T>(int count, Func<T> func)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return func();
+            }
+        }
+
         public static IEnumerable<TResult[]> GroupSlide<TResult>(this IEnumerable<TResult> items, int groupSize)
         {
             var enumerator = items.GetEnumerator();
@@ -57,6 +65,20 @@ namespace AoC2022.days
             {
                 yield return (index: i++, value: enumerator.Current);
             }
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+        {
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                action(enumerator.Current);
+            }
+        }
+
+        public static IEnumerable<T> WrapInEnumerable<T>(this T obj)
+        {
+            yield return obj;
         }
     }
 }
