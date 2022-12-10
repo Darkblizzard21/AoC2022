@@ -49,13 +49,38 @@ namespace AoC2022.days
 
 
 
-        public static IEnumerable<(int index, TResult value)> ZipWithIndices<TResult>(this IEnumerable<TResult> items)
+        public static IEnumerable<(int index, TResult value)> ZipWithIndices<TResult>(this IEnumerable<TResult> items, int startValue = 0)
         {
             var enumerator = items.GetEnumerator();
-            int i = 0;
+            int i = startValue;
             while (enumerator.MoveNext())
             {
                 yield return (index: i++, value: enumerator.Current);
+            }
+        }
+
+        public static IEnumerable<TTraceState> FlatAggregateTrace<TInput, TTraceState>(
+                this IEnumerable<TInput> items,
+                TTraceState seed,
+                Func<TTraceState, TInput, List<TTraceState>> func)
+        {
+
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var l = func(seed, enumerator.Current);
+                foreach (var v in l)
+                    yield return v;
+                seed = l.Last();
+            }
+        }
+
+        public static void DoForEach<T>(this IEnumerable<T> values, Action<T> action)
+        {
+            var enumerator = values.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                action(enumerator.Current);
             }
         }
     }
