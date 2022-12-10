@@ -2,9 +2,10 @@
 
 namespace AoC2022
 {
-    public enum Part
+    public enum Type
     {
-        First, Second
+        Sample, 
+        Input
     }
 
     public class InputProvider
@@ -16,18 +17,17 @@ namespace AoC2022
             path = ConfigurationManager.AppSettings.Get("InputFolder") + "\\" + day + "\\";
         }
 
-        public string GetInput(Part part = Part.First) => part switch
+        public string Get(Type type, int index = 0)
         {
-            Part.First => File.ReadAllText(path + "input.txt"),
-            Part.Second => File.ReadAllText(path + "input2.txt"),
-            _ => throw new ArgumentException()
-        };
-
-        public string GetSample(Part part = Part.First) => part switch
-        {
-            Part.First => File.ReadAllText(path + "sample.txt"),
-            Part.Second => File.ReadAllText(path + "sample2.txt"),
-            _ => throw new ArgumentException()
-        };
+            string basis = type switch
+            {
+                Type.Input => "input",
+                Type.Sample => "sample",
+                _ => throw new ArgumentException()
+            };
+            if (0 < index) basis += index;
+            string file = basis + ".txt";
+            return File.ReadAllText(path + file);
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace AoC2022.days
         {
             InputProvider inputProvider = new InputProvider("day03");
             // FirstPart
-            var rucksackPriority = inputProvider.GetInput()
+            var rucksackPriority = inputProvider.Get(Type.Input)
                 .Split("\r\n")
                 .Select(s => s.ToCharArray())
                 .Select(a => a.Take(a.Length / 2).Intersect(a.Skip(a.Length / 2)).First())
@@ -21,7 +21,7 @@ namespace AoC2022.days
             Console.WriteLine("First Part solution: " + rucksackPriority);
 
             // Second Part
-            var groupPriority = inputProvider.GetInput()
+            var groupPriority = inputProvider.Get(Type.Input)
                 .Split("\r\n")
                 .Chunk(3)
                 .Select(chunk => chunk.Select(s => s.ToCharArray().AsEnumerable()).Aggregate((a, b) => a.Intersect(b)).First())

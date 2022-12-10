@@ -5,9 +5,9 @@
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day06");
-            var firstResult = inputProvider.GetInput().ToCharArray().GroupSlide(4).ZipWithIndices().Where(c => c.value.Distinct().Count() == 4).Select(t => t.index + 4).First();
+            var firstResult = inputProvider.Get(Type.Input).ToCharArray().GroupSlide(4).ZipWithIndices().Where(c => c.value.Distinct().Count() == 4).Select(t => t.index + 4).First();
             Console.WriteLine(firstResult);
-            var secondResult = inputProvider.GetInput().ToCharArray().GroupSlide(14).ZipWithIndices().Where(c => c.value.Distinct().Count() == 14).Select(t => t.index + 14).First();
+            var secondResult = inputProvider.Get(Type.Input).ToCharArray().GroupSlide(14).ZipWithIndices().Where(c => c.value.Distinct().Count() == 14).Select(t => t.index + 14).First();
             Console.WriteLine(secondResult);
         }
     }

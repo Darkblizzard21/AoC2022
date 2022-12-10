@@ -5,7 +5,7 @@
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day05");
-            string[] stateAndInstructions = inputProvider.GetInput().Split("\r\n\r\n");
+            string[] stateAndInstructions = inputProvider.Get(Type.Input).Split("\r\n\r\n");
             Stack<char>[] stacks = ReadStacks(stateAndInstructions[0]);
             var countFromToList = stateAndInstructions[1].Split("\r\n").Select(s => s.Split(' ').Where(s => Int32.TryParse(s, out int _)).Select(s => Int32.Parse(s)).ToArray()).ToArray();
 

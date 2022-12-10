@@ -19,7 +19,7 @@
         {
             InputProvider inputProvider = new InputProvider("day02");
             // FirstPart
-            int firstResult = inputProvider.GetInput()
+            int firstResult = inputProvider.Get(Type.Input)
                 .Split("\r\n")
                 .Select(s => s.Split(" ")
                     .Select(c => c switch
@@ -32,7 +32,7 @@
                 .Select(l => l[1].Value() + l[1].Match(l[0])).Sum();
             Console.WriteLine("Day02: First Result: " + firstResult);
             // Second Part
-            var secondResult = inputProvider.GetInput()
+            var secondResult = inputProvider.Get(Type.Input)
                 .Split("\r\n")
                 .Select(s => (s[0] switch
                 {

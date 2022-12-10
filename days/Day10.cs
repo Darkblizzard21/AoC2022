@@ -17,7 +17,7 @@ namespace AoC2022.days
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day10");
-            var instructionTrace = inputProvider.GetInput().Split("\r\n").Select(s =>
+            var instructionTrace = inputProvider.Get(Type.Input).Split("\r\n").Select(s =>
                 {
                     var split = s.Split(" ");
                     return (split[0] switch
