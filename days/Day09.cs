@@ -2,7 +2,6 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using AoC2022.util;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace AoC2022.days
 {
@@ -13,13 +12,13 @@ namespace AoC2022.days
             InputProvider inputProvider = new InputProvider("day09");
             // First Part
             RopeState shortRope = new RopeState();
-            shortRope.ExecuteInstructions(inputProvider.GetInput().Split("\r\n"));
+            shortRope.ExecuteInstructions(inputProvider.Get(InputType.Input).Split("\r\n"));
             Console.WriteLine(shortRope.TrailToString());
             int shortVisits = shortRope.UniqueVisits();
             Console.WriteLine(shortVisits);
             // SecondPart
             RopeState longRope = new RopeState(10, Draw);
-            longRope.ExecuteInstructions(inputProvider.GetInput().Split("\r\n"));
+            longRope.ExecuteInstructions(inputProvider.Get(InputType.Input).Split("\r\n"));
             Console.WriteLine(longRope.TrailToString());
             Console.WriteLine(longRope.UniqueVisits());
 

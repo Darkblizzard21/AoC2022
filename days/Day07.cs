@@ -13,7 +13,7 @@ namespace AoC2022.days
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day07");
-            IEnumerable<string> enumerable = inputProvider.GetInput().Split("\r\n");
+            IEnumerable<string> enumerable = inputProvider.Get(Type.Input).Split("\r\n");
             IEnumerator<string> instructions = enumerable.GetEnumerator();
 
             // Build Folder Structure
