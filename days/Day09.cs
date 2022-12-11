@@ -17,7 +17,7 @@ namespace AoC2022.days
             int shortVisits = shortRope.UniqueVisits();
             Console.WriteLine(shortVisits);
             // SecondPart
-            RopeState longRope = new RopeState(10, Draw);
+            RopeState longRope = new RopeState(10);
             longRope.ExecuteInstructions(inputProvider.Get(InputType.Input).Split("\r\n"));
             Console.WriteLine(longRope.TrailToString());
             Console.WriteLine(longRope.UniqueVisits());
