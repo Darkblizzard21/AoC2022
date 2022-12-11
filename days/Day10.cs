@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AoC2022.util;
 
 namespace AoC2022.days
 {
@@ -17,7 +13,7 @@ namespace AoC2022.days
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day10");
-            var instructionTrace = inputProvider.Get(Type.Input).Split("\r\n").Select(s =>
+            var instructionTrace = inputProvider.Get(InputType.Input).Split("\r\n").Select(s =>
                 {
                     var split = s.Split(" ");
                     return (split[0] switch

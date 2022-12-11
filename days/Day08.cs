@@ -13,7 +13,7 @@ namespace AoC2022.days
         public static void solve()
         {
             InputProvider inputProvider = new InputProvider("day08");
-            int[][] trees = inputProvider.Get(Type.Input).Split("\r\n").Select(s => s.ToCharArray().Select(c => Int32.Parse(""+c)).ToArray()).ToArray();
+            int[][] trees = inputProvider.Get(InputType.Input).Split("\r\n").Select(s => s.ToCharArray().Select(c => Int32.Parse(""+c)).ToArray()).ToArray();
     
 
             var visibleTrees = trees.SelectMany((a, x) => a.Where((_, y) => xyIsVisible(x, y, trees))).Count();
