@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace AoC2022
+namespace AoC2022.util
 {
     public enum Part
     {

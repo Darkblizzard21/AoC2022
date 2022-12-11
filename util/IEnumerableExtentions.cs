@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AoC2022.days
+namespace AoC2022.util
 {
     public static class IEnumerableExtentions
     {
@@ -13,10 +13,11 @@ namespace AoC2022.days
         /// </summary>
         public static IEnumerable<int> FromTo(int start, int end)
         {
-            if(start == end) yield break;
+            if (start == end) yield break;
             int step = end - start > 0 ? 1 : -1;
             int current = start;
-            while (current != end) {
+            while (current != end)
+            {
                 yield return current;
                 current = current + step;
             }
@@ -36,7 +37,7 @@ namespace AoC2022.days
             Queue<TResult> currentView = new Queue<TResult>();
             for (int i = 0; i < groupSize; i++)
             {
-                if(enumerator.MoveNext())
+                if (enumerator.MoveNext())
                 {
                     currentView.Enqueue(enumerator.Current);
                 }
@@ -67,7 +68,7 @@ namespace AoC2022.days
             }
         }
 
-        public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+        public static void DoForEach<T>(this IEnumerable<T> items, Action<T> action)
         {
             var enumerator = items.GetEnumerator();
             while (enumerator.MoveNext())

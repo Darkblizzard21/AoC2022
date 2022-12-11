@@ -4,9 +4,10 @@ using System.IO.IsolatedStorage;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AoC2022.util;
 
 namespace AoC2022.days
-{  
+{
     public static class Day08
     {
         public static void solve()

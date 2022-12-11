@@ -1,5 +1,8 @@
-﻿using System.Numerics;
-using System.Linq;
+﻿using System.Drawing;
+using System.Numerics;
+using System.Runtime.InteropServices;
+using AoC2022.util;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AoC2022.days
 {
@@ -15,11 +18,52 @@ namespace AoC2022.days
             int shortVisits = shortRope.UniqueVisits();
             Console.WriteLine(shortVisits);
             // SecondPart
-            RopeState longRope = new RopeState(10);
+            RopeState longRope = new RopeState(10, Draw);
             longRope.ExecuteInstructions(inputProvider.GetInput().Split("\r\n"));
             Console.WriteLine(longRope.TrailToString());
             Console.WriteLine(longRope.UniqueVisits());
 
+        }
+
+        private static void Draw(string name, RopeState state)
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return;
+
+            var size = new Vector2(700, 700);
+            var offset = new Vector2(-350, -350);
+
+            Bitmap image = new Bitmap((int) size.X, (int) size.Y);
+
+            using (Graphics g = Graphics.FromImage(image))
+            {
+                g.FillRectangle(Brushes.Black, 0, 0, image.Width, image.Height);
+            }
+
+            var length = state.visited.Count();
+            state.visited.ZipWithIndices().DoForEach(t =>
+            {
+                var truePos = t.value - offset;
+                int x = (int) truePos.X + 1;
+                int y = (int)   truePos.Y + 1;
+                float percent = t.index /  (float) length;
+                image.SetPixel(x, y, Drawing.Inferno(percent));
+            });
+            var truePos = Vector2.Zero - offset;
+            int x = (int)truePos.X + 1;
+            int y = (int)truePos.Y + 1;
+            image.SetPixel(x, y, Color.White);
+
+            state.ropeParts.DoForEach(v =>
+            {
+                var truePos = v - offset;
+                int x = (int)truePos.X + 1;
+                int y = (int)truePos.Y + 1;
+                image.SetPixel(x, y, Color.Brown);
+                var _ = "";
+            });
+
+            Drawing.Save(image, @"day09\raw\" + name + ".png");
+            image.Dispose();
         }
     }
 
@@ -28,6 +72,9 @@ namespace AoC2022.days
         public readonly int length;
         public List<Vector2> visited;
         public Vector2[] ropeParts;
+        Action<string, RopeState>? drawAction;
+
+        int instruction = 0;
         public Vector2 head
         {
             get => ropeParts[0];
@@ -40,11 +87,12 @@ namespace AoC2022.days
             set => ropeParts[length - 1] = value;
         }
 
-        public RopeState(int ropeLength = 2)
+        public RopeState(int ropeLength = 2, Action<string, RopeState>? draw = null)
         {
             length = Math.Max(Math.Abs(ropeLength), 2);
             ropeParts = IEnumerableExtentions.Fill(length, () => new Vector2(0)).ToArray();
             visited = new List<Vector2>() { new Vector2(0, 0) };
+            drawAction = draw;
         }
 
         public void MoveHead(Vector2 move)
@@ -54,7 +102,7 @@ namespace AoC2022.days
             int dir = Math.Sign(movement);
             int count = Math.Abs(movement);
 
-            for (int _ = 0; _ < count; _++)
+            for (int m = 0; m < count; m++)
             {
                 if(moveHoizontal)
                 {
@@ -86,12 +134,16 @@ namespace AoC2022.days
                     }
                     else
                     {
-                        Console.WriteLine(RopeStateToString());
+                        Console.WriteLine(StateToString());
                         Console.WriteLine("Err");
                     }
                 }
                 visited.Add(ropeParts[ropeParts.Length - 1]);
 
+                if (drawAction != null)
+                {
+                    drawAction((instruction * 100 + m).ToString("D6"), this);
+                }
             }
         }
 
@@ -112,38 +164,19 @@ namespace AoC2022.days
                     _ => throw new ArgumentException()
                 };
                 MoveHead(moveVec);
+
+                instruction++;
             }
         }
 
         public int UniqueVisits() => visited.Distinct().Count();
 
-        public string TrailToString()
+        public string TrailToString() => Visualize(false).ToFormmatedString();
+        public string StateToString() => Visualize(true).ToFormmatedString();
+
+        private char[][] Visualize(bool visualizeRopParts)
         {
-            (Vector2, Vector2) bounds = visited.Aggregate(
-                (new Vector2(0), new Vector2(0)),
-                (p, c) => (new Vector2(Math.Min(p.Item1.X, c.X), Math.Min(p.Item1.Y, c.Y)),
-                          new Vector2(Math.Max(p.Item2.X, c.X), Math.Max(p.Item2.Y, c.Y))));
-            Vector2 lowerBound = bounds.Item1;
-            Vector2 upperBound = bounds.Item2;
-            Vector2 size = upperBound - lowerBound;
-
-            char[][] map = IEnumerableExtentions.FromTo(0,(int) size.Y + 3).Select(_ => IEnumerableExtentions.FromTo(0, (int) size.X + 3).Select(_ => '.').ToArray()).ToArray();
-            visited.ForEach(v => {
-                var truePos = v - lowerBound;
-                map[(int)truePos.Y + 1][(int)truePos.X + 1] = '#';
-             });
-
-            var truePos = new Vector2(0) - lowerBound;
-            map[(int)truePos.Y + 1][(int)truePos.X + 1] = 's';
-            return map.Select(l => l.Aggregate("", (p,c) => p + c)).Aggregate((p,c) => p + "\n" + c);
-        }
-
-        public string StateToString() => Visualize(false);
-        public string RopeStateToString() =>  Visualize(true);
-
-        private string Visualize(bool visualizeRopParts)
-        {
-            (Vector2, Vector2) bounds = visited.Concat(visualizeRopParts ? 
+            (Vector2, Vector2) bounds = visited.Concat(visualizeRopParts ?
                     ropeParts :
                     Enumerable.Empty<Vector2>())
                 .Aggregate(
@@ -164,7 +197,7 @@ namespace AoC2022.days
             map[(int)truePos.Y + 1][(int)truePos.X + 1] = 's';
 
             if (visualizeRopParts)
-                ropeParts.ZipWithIndices().Reverse().ForEach(t => {
+                ropeParts.ZipWithIndices().Reverse().DoForEach(t => {
                     var truePos = t.value - lowerBound;
                     int y = (int)truePos.Y + 1;
                     int x = (int)truePos.X + 1;
@@ -173,9 +206,8 @@ namespace AoC2022.days
                         Console.WriteLine("" + c + " covers " + map[y][x]);
                     map[y][x] = c;
                 });
-             
 
-            return map.Select(l => l.Aggregate("", (p, c) => p + c)).Aggregate((p, c) => p + "\n" + c);
+            return map;
         }
     }
 }

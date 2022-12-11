@@ -1,4 +1,6 @@
-﻿namespace AoC2022.days
+﻿using AoC2022.util;
+
+namespace AoC2022.days
 {
     public static class Day06
     {
