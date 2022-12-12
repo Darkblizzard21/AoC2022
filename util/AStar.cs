@@ -10,8 +10,8 @@
             Func<TNode, int> heuristic,
             Func<TNode, TNode, int> costFromTo) where TNode : notnull
         {
-            PriorityQueue<TNode, int> fScoreQueue = new PriorityQueue<TNode, int>();
-            fScoreQueue.Enqueue(startNode, heuristic(startNode));
+            SimplePriorityQueue<TNode> fScoreQueue = new SimplePriorityQueue<TNode>(isMinPriorityQueue: true);
+            fScoreQueue.Enqueue(heuristic(startNode), startNode);
 
             Dictionary<TNode, int> gScore = new Dictionary<TNode, int>
             {
@@ -21,7 +21,7 @@
             Dictionary<TNode, TNode> cameFrom = new Dictionary<TNode, TNode>();
 
 
-            while (fScoreQueue.TryDequeue(out TNode? current, out int currentFscore))
+            while (fScoreQueue.TryDequeue(out int currentFscore, out TNode? current))
             {
                 if(isDestination(current))
                     return (currentFscore,
@@ -34,7 +34,7 @@
                     {
                         cameFrom[neigbour] = current;
                         gScore[neigbour] = tentativeGscore;
-                        fScoreQueue.EnqueueOrUpdate(neigbour, tentativeGscore + heuristic(neigbour));
+                        fScoreQueue.UpdatePriority(neigbour, tentativeGscore + heuristic(neigbour));
                     }
                 }
             }
