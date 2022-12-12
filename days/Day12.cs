@@ -39,122 +39,25 @@ namespace AoC2022.days
             InputProvider inputProvider = new InputProvider("day12");
             Tile[][] map = inputProvider.Get(InputType.Input).Split("\r\n").Select((s, y) => s.ToCharArray().Select((c, x) => new Tile(c, x, y)).ToArray()).ToArray();
             Tile start = map.SelectMany(x => x).First(t => t.isStart);
-            var res = aStar(map, start);
-            PrintTrace(map, res.trace);
-            Console.WriteLine("Shortest from start: " + res.steps);
+            var res = AStar.FindPath(
+                    startNode: start,
+                    neigbours: node => map.DirectNeighboursFor(node.y, node.x).Where(other => node.canBeClimbed(other)),
+                    isDestination: node => node.isEnd,
+                    heuristic: node => node.minRemainingStepsToMax,
+                    costFromTo: (_, _) => 1
+                );
+            PrintTrace(map, res.trace.ToList());
+            Console.WriteLine("Shortest from start: " + res.cost);
 
-            var senicRoute = aStarMin(map);
-            PrintTrace(map, senicRoute.trace);
-            Console.WriteLine("Scenic Rout length: " + senicRoute.steps);
-        }
-
-
-        private static (int steps, List<Tile> trace) aStar(Tile[][] map, Tile? start = null) {
-            if (start == null)
-                start = map.SelectMany(x => x).First(t => t.isStart);
-
-            PriorityQueue<Tile, int> fScoreQueue = new PriorityQueue<Tile, int>();
-            fScoreQueue.Enqueue(start, start.minRemainingStepsToMax);
-
-            Dictionary<Tile, int> gScore = new Dictionary<Tile, int>
-            {
-                { start, 0 }
-            };
-
-            Dictionary<Tile, Tile> cameFrom = new Dictionary<Tile, Tile>();
-
-            while (fScoreQueue.TryPeek(out Tile _, out int currentFscore))
-            {
-                Tile current = fScoreQueue.Dequeue();
-
-                if (current.isEnd) {
-                    //PrintTrace(map, cameFrom, current);
-                    return (
-                            currentFscore,
-                            IEnumerableExtentions.InfiniteByValueTransformation(current, c => cameFrom.GetValueOrDefault(c, start)).TakeWhile(t => !t.isStart).Reverse().ToList());
-                }
-
-                foreach (Tile neigbour in map.DirectNeighboursFor(current.y, current.x).Where(other => current.canBeClimbed(other)))
-                {
-                    int tentativeGscore = gScore.GetOrThrow(current) + 1;
-                    if((!gScore.ContainsKey(neigbour)) || tentativeGscore < gScore.GetOrThrow(neigbour))
-                    {
-                        cameFrom[neigbour] = current;
-                        gScore[neigbour] = tentativeGscore;
-                        fScoreQueue.EnqueueOrUpdate(neigbour, tentativeGscore + neigbour.minRemainingStepsToMax); 
-                    }
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        private static (int steps, List<Tile> trace) aStarMin(Tile[][] map, Tile? start = null)
-        {
-            if (start == null)
-                start = map.SelectMany(x => x).First(t => t.isEnd);
-
-            PriorityQueue<Tile, int> fScoreQueue = new PriorityQueue<Tile, int>();
-            fScoreQueue.Enqueue(start, start.height);
-
-            Dictionary<Tile, int> gScore = new Dictionary<Tile, int>
-            {
-                { start, 0 }
-            };
-
-            Dictionary<Tile, Tile> cameFrom = new Dictionary<Tile, Tile>();
-
-            while (fScoreQueue.TryPeek(out Tile _, out int currentFscore))
-            {
-                Tile current = fScoreQueue.Dequeue();
-
-                if (current.height == 0)
-                {
-                    //PrintTrace(map, cameFrom, current);
-                    return (
-                            currentFscore,
-                            IEnumerableExtentions.InfiniteByValueTransformation(current, c => cameFrom.GetValueOrDefault(c, current)).TakeWhile(t =>  !t.isEnd).ToList());
-                }
-
-                foreach (Tile neigbour in map.DirectNeighboursFor(current.y, current.x).Where(other => other.canBeClimbed(current)))
-                {
-                    int tentativeGscore = gScore.GetOrThrow(current) + 1;
-                    if ((!gScore.ContainsKey(neigbour)) || tentativeGscore < gScore.GetOrThrow(neigbour))
-                    {
-                        cameFrom[neigbour] = current;
-                        gScore[neigbour] = tentativeGscore;
-                        fScoreQueue.EnqueueOrUpdate(neigbour, tentativeGscore + neigbour.height);
-                    }
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        private static void PrintTrace(Tile[][] map, Dictionary<Tile, Tile> cameFrom, Tile current)
-        {
-            char[][] cMap = map.Select(s => s.Select(t => t.Name).ToArray()).ToArray();
-            cMap[current.y][current.x] = '#';
-            while(cameFrom.ContainsKey(current))
-            {
-                var next = cameFrom[current];
-                int xDist = current.x - next.x;
-                int yDist = current.y -next.y;
-                cMap[next.y][next.x] = xDist switch
-                {
-                    0 => yDist switch
-                    {
-                        1 => 'v',
-                        -1 => '^',
-                        _ => throw new NotImplementedException()
-                    },
-                    1 => '>',
-                    -1 => '<',
-                    _ => throw new NotImplementedException()
-                };
-                current = next;
-            }
-            Console.WriteLine(cMap.ToFormmatedString() + "\n");
+            var senicRoute = AStar.FindPath(
+                    startNode: map.SelectMany(l => l).First(t => t.isEnd),
+                    neigbours: node => map.DirectNeighboursFor(node.y, node.x).Where(other => other.canBeClimbed(node)),
+                    isDestination: node => node.height == 0,
+                    heuristic: node => node.height,
+                    costFromTo: (_, _) => 1
+                );
+            PrintTrace(map, senicRoute.trace.ToList());
+            Console.WriteLine("Scenic Rout length: " + senicRoute.cost);
         }
 
         private static void PrintTrace(Tile[][] map, List<Tile> trace)
