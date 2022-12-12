@@ -97,5 +97,16 @@ namespace AoC2022.util
                 seed = l.Last();
             }
         }
+
+        public static IEnumerable<State> InfiniteByValueTransformation<State>(State start, Func<State,State> func)
+        {
+            var current = start;
+            yield return current;
+            while (true)
+            {
+                current = func(current);
+                yield return current;
+            }
+        }
     }
 }
