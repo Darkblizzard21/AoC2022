@@ -8,7 +8,6 @@ namespace AoC2022.util
 {
     public static class ArrayExtensions
     {
-        public static string ToFormmatedString(this char[][] array) => array.Select(l => l.Aggregate("", (p, c) => p + c)).Aggregate((p, c) => p + "\n" + c);
 
         public static IEnumerable<T> DirectNeighboursFor<T>(this T[][] array, int x, int y)
         {
@@ -32,5 +31,9 @@ namespace AoC2022.util
             if (upperY < array[x].Length)
                 yield return array[x][upperY];
         }
+
+        public static T[][] New2DWithDefault<T>(int xSize, int ySize, Func<T> defaultGenerator) => IEnumerableExtentions.Generate(xSize, () => IEnumerableExtentions.Generate(ySize, () => 0))
+            .Select(t => t.Select(_ => defaultGenerator()).ToArray())
+            .ToArray();
     }
 }

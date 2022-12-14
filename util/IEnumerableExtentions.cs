@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AoC2022.days;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,15 +8,23 @@ using System.Threading.Tasks;
 namespace AoC2022.util
 {
     public static class IEnumerableExtentions
-    {
+        {
         /// <summary>
         /// Returns sequence from start (included) to end (excluded)
         /// </summary>
-        public static IEnumerable<int> FromTo(int start, int end)
+        public static IEnumerable<int> FromTo(int start, int end) => FromTo(start, end, false);
+
+        /// <summary>
+        /// Returns sequence from start (included) to end (excluded or indcluded by choise)
+        /// </summary>
+        public static IEnumerable<int> FromTo(int start, int end, bool includeEnd)
         {
             if (start == end) yield break;
             int step = end - start > 0 ? 1 : -1;
             int current = start;
+            if (includeEnd) end += step;
+            if (includeEnd && step == 0)
+                yield return end;
             while (current != end)
             {
                 yield return current;
@@ -68,12 +77,15 @@ namespace AoC2022.util
             }
         }
 
-        public static void DoForEach<T>(this IEnumerable<T> items, Action<T> action)
+
+        public static void DoForEach<T>(this IEnumerable<T> items, Action<T> action) => items.DoForEach((t,_) => action(t));
+        public static void DoForEach<T>(this IEnumerable<T> items, Action<T,int> action)
         {
             var enumerator = items.GetEnumerator();
+            int i = 0;
             while (enumerator.MoveNext())
             {
-                action(enumerator.Current);
+                action(enumerator.Current, i++);
             }
         }
 
@@ -108,5 +120,40 @@ namespace AoC2022.util
                 yield return current;
             }
         }
+
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> items)
+        {
+            var enumerator = items.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                var innerEnumerator = enumerator.Current.GetEnumerator();
+                while (innerEnumerator.MoveNext())
+                {
+                    yield return innerEnumerator.Current;
+                }
+            }
+        }
+
+        public static IEnumerable<T> Generate<T>(int count, Func<T> generator)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return generator();
+            }
+        }
+
+
+        public static string ToFormmatedString(this IEnumerable<IEnumerable<char>> chars) => chars.Select(l => l.Aggregate("", (p, c) => p + c)).Aggregate((p, c) => p + "\n" + c);
+
+        public static IEnumerable<IEnumerable<T>> SwapInnerWithOuter<T>(this IEnumerable<IEnumerable<T>> values)
+        {
+            var enumerators = values.Select(x=> x.GetEnumerator()).ToList();
+            while(enumerators.All(e => e.MoveNext()))
+            {
+                yield return enumerators.Select(e => e.Current);
+            }
+        }
+
+
     }
 }
