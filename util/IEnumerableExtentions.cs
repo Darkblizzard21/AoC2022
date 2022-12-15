@@ -153,7 +153,12 @@ namespace AoC2022.util
                 yield return enumerators.Select(e => e.Current);
             }
         }
-
+        
+        public static IEnumerable<T> Unique<T>(this IEnumerable<T> items)
+        {
+            HashSet<T> set = new HashSet<T>(items);
+            return set;
+        }
 
     }
 }
