@@ -9,7 +9,7 @@ namespace AoC2022.days
             InputProvider inputProvider = new InputProvider("day05");
             string[] stateAndInstructions = inputProvider.Get(InputType.Input).Split("\r\n\r\n");
             Stack<char>[] stacks = ReadStacks(stateAndInstructions[0]);
-            var countFromToList = stateAndInstructions[1].Split("\r\n").Select(s => s.Split(' ').Where(s => Int32.TryParse(s, out int _)).Select(s => Int32.Parse(s)).ToArray()).ToArray();
+            var countFromToList = stateAndInstructions[1].Split("\r\n").Select(s => s.Split(' ').Where(s => Int32.TryParse(s, out int _)).Select(Int32.Parse).ToArray()).ToArray();
 
             foreach (var countFromTo in countFromToList)
             {
