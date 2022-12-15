@@ -101,9 +101,8 @@ namespace AoC2022.days
                     .Select(r => r.Union(0, max + 1)).ToArray());
                 })
                 .Where(t => t.r.Length > 1 || t.r[0].start == 1 || t.r[0].end == max - 1)
-                .Select(t => new IntVector2(t.r[0].end + 1, t.i))
-                .Select(b => b.x * 4000000 + b.y)
-                .Select(tf => { Console.WriteLine("Posible frequency: " + tf); return tf; }).ToArray();
+                .Select(t => new IntVector2(t.r[1].start - 1, t.i))
+                .Select(b => b.x * 4000000L + b.y);
             tuningFrequency.DoForEach(tf => Console.WriteLine("Posible frequency: " + tf));
         }
     }
