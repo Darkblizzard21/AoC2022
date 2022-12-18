@@ -58,7 +58,6 @@ namespace AoC2022.days
                 int x = (int)truePos.X + 1;
                 int y = (int)truePos.Y + 1;
                 image.SetPixel(x, y, Color.Brown);
-                var _ = "";
             });
 
             Drawing.Save(image, @"day09\raw\" + name + ".png");

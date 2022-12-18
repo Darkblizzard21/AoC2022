@@ -26,7 +26,7 @@ namespace AoC2022.util
         public int ManthattenDistanceTo(IntVector2 other) => Math.Abs(x - other.x) + Math.Abs(y - other.y);
         public override string ToString()
         {
-            return + x + "," + y;
+            return x + "," + y;
         }
         public override int GetHashCode()
         {

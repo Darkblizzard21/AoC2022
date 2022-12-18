@@ -124,7 +124,6 @@ namespace AoC2022.days
                 {
                     Console.WriteLine("== After round " + (i + 1) + " ==");
                     printMonkeysInspectCount(monkeys);
-                    var _ = 0;
                 }
             }
             long monkeyBuissnes10000 = monkeys.Select(m => m.inspectCount).OrderByDescending(i => i).Take(2).Select(i => (long) i).Aggregate((p, c) => p * c);

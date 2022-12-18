@@ -1,6 +1,8 @@
 ﻿using AoC2022.days;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -160,5 +162,32 @@ namespace AoC2022.util
             return set;
         }
 
+        public static IEnumerable<T> AsRepeatingSequence<T>(this IEnumerable<T> values) => RepeatingSequenceFromList(values.ToList());
+
+        private static IEnumerable<T> RepeatingSequenceFromList<T>(List<T> values)
+        {
+            var enumerator = values.GetEnumerator();
+            while (true)
+            {
+                if (enumerator.MoveNext()) yield return enumerator.Current;
+                else
+                {
+                    enumerator.Dispose();
+                    enumerator = values.GetEnumerator();
+                }
+            }
+        } 
+
+        public static bool TryGetFirst<T>(this IEnumerable<T> values, [MaybeNullWhen(false)] out T first)
+        {
+            var enumerator = values.GetEnumerator();
+            if (enumerator.MoveNext())
+            {
+                first = enumerator.Current;
+                return true;
+            }
+            first = default;
+            return false;
+        }
     }
 }
