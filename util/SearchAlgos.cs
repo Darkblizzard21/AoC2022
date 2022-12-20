@@ -135,6 +135,35 @@ namespace AoC2022.util
             }
             return false;
         }
+        public static TNode Best<TNode>(
+            TNode start,
+            Func<TNode, int> evaluation,
+            Func<TNode, IEnumerable<TNode>> neigbours) where TNode : notnull
+        {
+            HashSet<TNode> visited = new HashSet<TNode>();
+            Stack<TNode> frontier = new Stack<TNode>();
+            visited.Add(start);
+            frontier.Push(start);
+            TNode best = start;
+            int bestScore = evaluation(start);
+            while (frontier.TryPop(out TNode? result))
+            {
+                int cScore = evaluation(result);
+                if(cScore > bestScore)
+                {
+                    bestScore = cScore;
+                    best = result;
+                }
+                foreach (var n in neigbours(result))
+                {
+                    if (visited.Contains(n)) continue;
+                    visited.Add(n);
+                    frontier.Push(n);
+                }
+            }
+
+            return best;
+        }
 
         public static IEnumerable<TNode> Reachable<TNode>(
             TNode start,
