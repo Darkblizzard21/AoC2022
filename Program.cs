@@ -1,3 +1,3 @@
 ﻿using AoC2022.days;
 
-Day18.solve();
+Day20.solve();

@@ -33,7 +33,13 @@ namespace AoC2022.util
                 current = current + step;
             }
         }
-
+        public static IEnumerable<T> Repeat<T>(int count, T value)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                yield return value;
+            }
+        }
         public static IEnumerable<T> Sequence<T>(int count, Func<T> func)
         {
             for (int i = 0; i < count; i++)
