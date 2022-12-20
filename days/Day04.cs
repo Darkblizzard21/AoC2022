@@ -10,14 +10,14 @@ namespace AoC2022.days
             // First Part
             var SubsetAsignments = inputProvider.Get(InputType.Input)
                 .Split("\r\n")
-                .Select(s => s.Split(",").Select(s => s.Split("-").Select(s => { Int32.TryParse(s, out int i); return i; }).ToArray()).ToArray())
+                .Select(s => s.Split(",").Select(s => s.Split("-").Select(Int32.Parse).ToArray()).ToArray())
                 .Where(a => IsSubset(a[0][0], a[0][1], a[1][0], a[1][1]))
                 .Count();
             Console.WriteLine(SubsetAsignments);
             // Second Part
             var OverlappingAsignments = inputProvider.Get(InputType.Input)
                 .Split("\r\n")
-                .Select(s => s.Split(",").Select(s => s.Split("-").Select(s => { Int32.TryParse(s, out int i); return i; }).ToArray()).ToArray())
+                .Select(s => s.Split(",").Select(s => s.Split("-").Select(Int32.Parse).ToArray()).ToArray())
                 .Where(a => IsOverlapping(a[0][0], a[0][1], a[1][0], a[1][1]))
                 .Count();
             Console.WriteLine(SubsetAsignments);
