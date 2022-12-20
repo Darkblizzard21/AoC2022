@@ -25,7 +25,7 @@
             {
                 if(isDestination(current))
                     return (currentFscore,
-                            IEnumerableExtentions.InfiniteByValueTransformation(current, c => cameFrom.GetOrThrow(c)).TakeWhile(node => !node.Equals(startNode)).Reverse());
+                            EnumerableGeneration.InfiniteByValueTransformation(current, c => cameFrom.GetOrThrow(c)).TakeWhile(node => !node.Equals(startNode)).Reverse());
 
                 foreach (var neigbour in neigbours(current))
                 {

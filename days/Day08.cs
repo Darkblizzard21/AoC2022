@@ -29,16 +29,16 @@ namespace AoC2022.days
             if (y == 0 || y == map[x].Length - 1) return true;
 
             int height = map[x][y];
-            bool visibleInXMinus = !IEnumerableExtentions.FromTo(x -  1, -1).Select(i => map[i][y] < height).Any(b => !b);
+            bool visibleInXMinus = !EnumerableGeneration.FromTo(x -  1, -1).Select(i => map[i][y] < height).Any(b => !b);
             if (visibleInXMinus) return true;
 
-            bool visibleInYMinus = !IEnumerableExtentions.FromTo(y - 1, -1).Select(i => map[x][i] < height).Any(b => !b);
+            bool visibleInYMinus = !EnumerableGeneration.FromTo(y - 1, -1).Select(i => map[x][i] < height).Any(b => !b);
             if (visibleInYMinus) return true;
 
-            bool visibleInXPositiv = !IEnumerableExtentions.FromTo(x + 1, map.Length).Select(i => map[i][y] < height).Any(b => !b);
+            bool visibleInXPositiv = !EnumerableGeneration.FromTo(x + 1, map.Length).Select(i => map[i][y] < height).Any(b => !b);
             if (visibleInXPositiv) return true;
 
-            bool visibleInYPositiv = !IEnumerableExtentions.FromTo(y + 1, map[x].Length).Select(i => map[x][i] < height).Any(b => !b);
+            bool visibleInYPositiv = !EnumerableGeneration.FromTo(y + 1, map[x].Length).Select(i => map[x][i] < height).Any(b => !b);
             if (visibleInYPositiv) return true;
 
             return false;
@@ -50,10 +50,10 @@ namespace AoC2022.days
             if (y == 0 || y == map[x].Length - 1) return 0;
 
             int height = map[x][y];
-            int upScore = x - IEnumerableExtentions.FromTo(x - 1, -1).FirstOrDefault(i => map[i][y] >= height, 0);
-            int leftScore = y - IEnumerableExtentions.FromTo(y - 1, -1).FirstOrDefault(i => map[x][i] >= height, 0);
-            int downScore = IEnumerableExtentions.FromTo(x + 1, map.Length).FirstOrDefault(i => map[i][y] >= height, map.Length-1) - x;
-            int rightScore = IEnumerableExtentions.FromTo(y + 1, map[x].Length).FirstOrDefault(i => map[x][i] >= height, map[x].Length - 1) - y;
+            int upScore = x - EnumerableGeneration.FromTo(x - 1, -1).FirstOrDefault(i => map[i][y] >= height, 0);
+            int leftScore = y - EnumerableGeneration.FromTo(y - 1, -1).FirstOrDefault(i => map[x][i] >= height, 0);
+            int downScore = EnumerableGeneration.FromTo(x + 1, map.Length).FirstOrDefault(i => map[i][y] >= height, map.Length-1) - x;
+            int rightScore = EnumerableGeneration.FromTo(y + 1, map[x].Length).FirstOrDefault(i => map[x][i] >= height, map[x].Length - 1) - y;
 
             int score = upScore * leftScore * downScore * rightScore;
             return score;

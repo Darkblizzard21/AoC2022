@@ -1,6 +1,4 @@
 ﻿using AoC2022.util;
-using System.Drawing.Imaging;
-using System.Numerics;
 
 namespace AoC2022.days
 {
@@ -36,8 +34,8 @@ namespace AoC2022.days
             // Fill map
             var t = lines.SelectMany(line => line.GroupSlide(2))
                 .SelectMany(l => l[0].x == l[1].x ?
-                    IEnumerableExtentions.FromTo(l[0].y, l[1].y, true).Select(y => (x: l[0].x, y: y)) :
-                    IEnumerableExtentions.FromTo(l[0].x, l[1].x, true).Select(x => (x: x, y: l[0].y))
+                    EnumerableGeneration.FromTo(l[0].y, l[1].y, true).Select(y => (x: l[0].x, y: y)) :
+                    EnumerableGeneration.FromTo(l[0].x, l[1].x, true).Select(x => (x: x, y: l[0].y))
                     ).ToArray();
             t.DoForEach(t => map[t.x-offset.x][t.y-offset.y] = State.Rock);
             Console.WriteLine("Created SandPile");
@@ -171,7 +169,7 @@ namespace AoC2022.days
             State.Sand => 'o',
             _ => throw new ArgumentException()
         })).SwapInnerWithOuter().ToFormmatedString()
-            + IEnumerableExtentions.Generate(map.Length, () => '#').Aggregate("\n", (p, c) => p + c));
+            + EnumerableGeneration.Sequence(map.Length, () => '#').Aggregate("\n", (p, c) => p + c));
         public int SandCount() => map.Flatten().Where(s => s == State.Sand).Count() + outSideSand.Count();
     }
     public static class Day14

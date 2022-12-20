@@ -32,8 +32,6 @@ namespace AoC2022.util
                 yield return array[x][upperY];
         }
 
-        public static T[][] New2DWithDefault<T>(int xSize, int ySize, Func<T> defaultGenerator) => IEnumerableExtentions.Generate(xSize, () => IEnumerableExtentions.Generate(ySize, () => 0))
-            .Select(t => t.Select(_ => defaultGenerator()).ToArray())
-            .ToArray();
+        public static T[][] New2DWithDefault<T>(int xSize, int ySize, Func<T> defaultGenerator) => EnumerableGeneration.Sequence2D(xSize, ySize, defaultGenerator).ToArray2D();
     }
 }

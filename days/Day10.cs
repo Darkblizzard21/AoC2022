@@ -36,7 +36,7 @@ namespace AoC2022.days
                 .Sum();
             Console.WriteLine(signalStrength);
 
-            char[][] display = IEnumerableExtentions.FromTo(0,6).Select(_ => IEnumerableExtentions.FromTo(0,40).Select(_ => '.').ToArray()).ToArray();
+            char[][] display = EnumerableGeneration.Sequence2D(6, 40, () => '.').ToArray2D();
 
             instructionTrace.Chunk(40).ZipWithIndices().DoForEach(t => t.value.ZipWithIndices().DoForEach(v =>
             {

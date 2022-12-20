@@ -1,14 +1,7 @@
-﻿using AoC2022.days;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AoC2022.util
+﻿namespace AoC2022.util
 {
-    public static class IEnumerableExtentions
-        {
+    public static class EnumerableGeneration
+    {
         /// <summary>
         /// Returns sequence from start (included) to end (excluded)
         /// </summary>
@@ -32,13 +25,32 @@ namespace AoC2022.util
             }
         }
 
-        public static IEnumerable<T> Fill<T>(int count, Func<T> func)
+        public static IEnumerable<T> Sequence<T>(int count, Func<T> func)
         {
             for (int i = 0; i < count; i++)
             {
                 yield return func();
             }
         }
+
+        public static IEnumerable<IEnumerable<T>> Sequence2D<T>(int xSize, int ySize, Func<T> func) => Sequence(xSize, () => Sequence(ySize, func));
+   
+
+
+        public static IEnumerable<State> InfiniteByValueTransformation<State>(State start, Func<State, State> func)
+        {
+            var current = start;
+            yield return current;
+            while (true)
+            {
+                current = func(current);
+                yield return current;
+            }
+        }
+    }
+
+    public static class IEnumerableExtentions
+    { 
 
         public static IEnumerable<TResult[]> GroupSlide<TResult>(this IEnumerable<TResult> items, int groupSize)
         {
@@ -110,17 +122,6 @@ namespace AoC2022.util
             }
         }
 
-        public static IEnumerable<State> InfiniteByValueTransformation<State>(State start, Func<State,State> func)
-        {
-            var current = start;
-            yield return current;
-            while (true)
-            {
-                current = func(current);
-                yield return current;
-            }
-        }
-
         public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> items)
         {
             var enumerator = items.GetEnumerator();
@@ -134,13 +135,8 @@ namespace AoC2022.util
             }
         }
 
-        public static IEnumerable<T> Generate<T>(int count, Func<T> generator)
-        {
-            for (int i = 0; i < count; i++)
-            {
-                yield return generator();
-            }
-        }
+        public static T[][] ToArray2D<T>(this IEnumerable<IEnumerable<T>> items) => items.Select(e => e.ToArray()).ToArray();
+        
 
 
         public static string ToFormmatedString(this IEnumerable<IEnumerable<char>> chars) => chars.Select(l => l.Aggregate("", (p, c) => p + c)).Aggregate((p, c) => p + "\n" + c);
@@ -153,7 +149,5 @@ namespace AoC2022.util
                 yield return enumerators.Select(e => e.Current);
             }
         }
-
-
     }
 }

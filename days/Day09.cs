@@ -89,7 +89,7 @@ namespace AoC2022.days
         public RopeState(int ropeLength = 2, Action<string, RopeState>? draw = null)
         {
             length = Math.Max(Math.Abs(ropeLength), 2);
-            ropeParts = IEnumerableExtentions.Fill(length, () => new Vector2(0)).ToArray();
+            ropeParts = EnumerableGeneration.Sequence(length, () => new Vector2(0)).ToArray();
             visited = new List<Vector2>() { new Vector2(0, 0) };
             drawAction = draw;
         }
@@ -186,7 +186,7 @@ namespace AoC2022.days
             Vector2 upperBound = bounds.Item2;
             Vector2 size = upperBound - lowerBound;
 
-            char[][] map = IEnumerableExtentions.FromTo(0, (int)size.Y + 3).Select(_ => IEnumerableExtentions.FromTo(0, (int)size.X + 3).Select(_ => '.').ToArray()).ToArray();
+            char[][] map = EnumerableGeneration.FromTo(0, (int)size.Y + 3).Select(_ => EnumerableGeneration.FromTo(0, (int)size.X + 3).Select(_ => '.').ToArray()).ToArray();
             visited.ForEach(v => {
                 var truePos = v - lowerBound;
                 map[(int)truePos.Y + 1][(int)truePos.X + 1] = '#';
